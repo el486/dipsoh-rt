@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 class ConexionDB {
 private $db;
 
@@ -10,6 +11,8 @@ private $db;
 	}
 }
 
+=======
+>>>>>>> master
 class ControladorAccess {
 	private $db;
 	private $conn;
@@ -17,8 +20,13 @@ class ControladorAccess {
 	private $field_list;
 
 	public function __construct($db,$sql) {
+<<<<<<< HEAD
 		$this->db = $db;
 		$this->sql = $sql;
+=======
+	$this->db = $db;
+	$this->sql = $sql;
+>>>>>>> master
 	}
 	
 	public function set_field_list($new_field_list) {
@@ -43,8 +51,12 @@ class ControladorAccess {
 		
 	public function get_json_data() {
 		$lista = json_decode($this->field_list);
+<<<<<<< HEAD
 		$base = $this->db->getDB();
 		$this->conn = odbc_connect("DRIVER={Microsoft Access Driver (*.mdb)}; DBQ=$base",'','') or exit('Cannot open with driver.');
+=======
+		$this->conn = odbc_connect("DRIVER={Microsoft Access Driver (*.mdb)}; DBQ=$this->db",'','') or exit('Cannot open with driver.');
+>>>>>>> master
 		if(!$this->conn)
 			  exit("Connection Failed: " . $this->conn);
 		$rs = odbc_exec($this->conn, $this->sql);
@@ -59,6 +71,7 @@ class ControladorAccess {
 			$value .='],';
 		}
 		$value .= ']';
+<<<<<<< HEAD
 		$value = str_replace(",]","]",$value);
 		odbc_close_all ();
 		//$value = utf8_encode($value);
@@ -155,4 +168,11 @@ class ParserNomencla extends Parser {
 	}
 
 }
+=======
+		$value = str_replace(",],]","]]",$value);
+		odbc_close_all ();
+		return $value;
+	}
+}
+>>>>>>> master
 ?>
