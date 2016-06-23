@@ -5,12 +5,28 @@
 <title>Consultas Relevamiento Territorial</title>
 <meta http-equiv="content-type" content="text/html; charset=LATIN1">
 <style type="text/css">
-		html,body{
-			margin:20;
-			padding:10px 20px 10px 20px;
-			font:normal 18px arial,tahoma, helvetica, sans-serif;
-		}
+		body {
+			  background: #646E89; /* fallback for old browsers */
+			  background: -webkit-linear-gradient(right, #646E89, #497FA3);
+			  background: -moz-linear-gradient(right, #646E89, #497FA3);
+			  background: -o-linear-gradient(right, #646E89, #497FA3);
+			  background: linear-gradient(to left, #646E89, #497FA3);
+			  font-family: "Roboto", sans-serif;
+			  -webkit-font-smoothing: antialiased;
+			  -moz-osx-font-smoothing: grayscale;      
+			}
 </style>
+<script>
+
+function linkExpedientes(val){
+var val2=val.replace('/','-').replace(' Alc:','-').replace(' Cpo:','-').replace(' ','');
+var array=val2.split('-');
+var url= 'http://sistemas.gba.gov.ar/consulta/expedientes/movimientos.php?caract='+array[0]+'&nroexp='+array[1]+'&anioexp='+array[2]+'&alcance=0&nrocuerpo=1'
+window.open(url,'_blank');
+}
+
+</script>
+
 </head>
 <body>
     <h1 align="center" id="title">CONSULTAS RELEVAMIENTO TERRITORIAL</h1>
@@ -18,16 +34,28 @@
 	<div id="infoDIV">
 		<table ALIGN="CENTER" border=0  cellpadding=10>
 			<tr >
-				<td><h2><a href="http://192.168.1.13:8080/heron/rt/php/carpetas.php" title="Las que carga Jorgito Goldmann">CARPETAS EN TRAMITE</a></h2></td>
+				<td><h2><a href="http://192.168.1.13:8080/heron/rt/php/carpetas.php" title="Las que carga Jorgito Goldmann" target="_blank">CARPETAS EN TRAMITE</a></h2></td>
 			</tr>
 			<tr >
-				<td><H2><a href="http://192.168.1.13:8080/heron/rt/php/exped.php" title="Los carga Su Roussy">EXPEDIENTES EN LA OFICINA </a></H2></td>
+				<td><H2><a href="http://192.168.1.13:8080/heron/rt/php/exped.php" title="Los carga Su Roussy" target="_blank">EXPEDIENTES EN LA OFICINA </a></H2></td>
 			</tr>
 			<tr >
-				<td><H2><a href="http://www.mosp.gba.gov.ar/sig_hidraulica/planos/planos.asp" title="Los carga Su Coloma. Preguntar contraseña a Mauro">PLANOS FINALIZADOS</a></H2></td>
+				<td><H2><a href="http://www.mosp.gba.gov.ar/sig_hidraulica/planos/planos.asp" title="Los carga Su Coloma. Preguntar contraseña a Mauro" target="_blank">PLANOS FINALIZADOS (usuario:dipsoh)</a></H2></td>
 			</tr>
 			<tr >
-				<td><H2><a href="http://www.mosp.gba.gov.ar/sig_hidraulica/visor/index.php" title="Este lo mantengo yo (Mauro). Preguntame la contraseña">VISOR SIG DiPSOH</a></H2></td>
+				<td><H2><a href="http://www.mosp.gba.gov.ar/sig_hidraulica/visor/index.php" title="Este lo mantengo yo (Mauro). Preguntame la contraseña" target="_blank">VISOR SIG DPOH (usuario:dipsoh)</a></H2></td>
+			</tr>
+			<tr >
+				<td><H2><a href="https://www.carto.arba.gov.ar/" title="Visor Arba" target="_blank">VISOR ARBA</a></H2></td>
+			</tr>
+			<tr >
+				<td><H2><a href="http://www.geobasig.com.ar/" title="Visor Geodesia" target="_blank">VISOR GEODESIA</a></H2></td>
+			</tr>
+			<tr>
+				<td> Descargar Plano: <input type="text" name="plano" id="plano" placeholder="Ej: 19-22-1998"/ onchange="javascript:document.location='http://www.mosp.gba.gov.ar/sistemas/geodesia/ugeodesia/Geodesia/'+document.getElementById('plano').value+'(PA).dwf';"><td>
+			</tr>
+			<tr>
+				<td> Ver Expediente: <input type="text" name="exp" id="exp" placeholder="Ej: 2406-1171/2005"/ onchange="javascript:linkExpedientes(document.getElementById('exp').value);"><td>
 			</tr>
 		</table>
 	</div>

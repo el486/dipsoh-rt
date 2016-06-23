@@ -58,48 +58,12 @@
 
 <script>
     data=<?php
-		$db = 'E:\\DatosGis\\Planos\\baseRT_bs.mdb';
-		$conn = odbc_connect("DRIVER={Microsoft Access Driver (*.mdb)}; DBQ=$db",'','') or exit('Cannot open with driver.');
-		function not_null($var)
-		{
-			if (!is_null($var)){
-				return str_replace(array("\r\n","\r","\""),"-", $var);
-			} else {
-				return '--';
-			}
-		}
-		
-		function fecha_not_null($var)
-		{
-			if (!is_null($var)){
-				return date_format(date_create($var),'d/m/Y');
-			} else {
-				return '--';
-			}
-		}
-		
-		
-		if(!$conn)
-              exit("Connection Failed: " . $conn);
-        $sql = "SELECT * FROM carpetas";
-        $rs = odbc_exec($conn, $sql);
-        if(!$rs)
-              exit("Error in SQL");
-		echo '[';
-		while (odbc_fetch_row($rs)){
-		echo '['.odbc_result($rs,"Num_carpeta").','
-				.not_null(odbc_result($rs,"Partido")).',"'
-				.not_null(odbc_result($rs,"Parcela")).'","'
-				.not_null(odbc_result($rs,"Obra")).'","'
-				.not_null(odbc_result($rs,"Propietario")).'","'
-				.not_null(odbc_result($rs,"Num_expediente")).'","'
-				.not_null(odbc_result($rs,"Observaciones")).'","'
-				.not_null(odbc_result($rs,"Num_plano")).'","'
-				.fecha_not_null(odbc_result($rs,"Fecha_aprobacion")).'","'
-				.not_null(odbc_result($rs,"Finalizado")).'"'
-				.'],';
-		}
-		echo ']';
+		include("class_lib.php");
+		$base = new ConexionDB ("E:\\DatosGis\\Planos\\baseRT_bs.mdb");
+
+		$carpetas = new ControladorAccess($base,"SELECT * FROM carpetas");
+		$carpetas->set_field_list('[["Num_carpeta","num"],["Partido","num"],["Parcela","txt"],["Obra","txt"],["Propietario","txt"],["Num_expediente","txt"],["Observaciones","txt"],["Num_plano","txt"],["Fecha_aprobacion","fecha"],["Finalizado","txt"]]');
+		echo $carpetas->get_json_data();
 	?>;
 	
 function linkExpedientes(val){
