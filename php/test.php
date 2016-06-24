@@ -4,11 +4,11 @@
 include("class_lib.php");
 $carpeta = $_REQUEST['carpeta'];
 $base = new ConexionDB ("E:\\DatosGis\\Planos\\baseRT_bs.mdb");
+$baseExp = new ConexionDB ("E:\\DatosGis\\Planos\\expedientes.accdb");
 if (is_null($carpeta)) $carpeta=0; 
 
-$carpetas = new ControladorAccess($base,"SELECT * FROM carpetas");
-$carpetas->set_field_list('[["Num_carpeta","num"],["Partido","num"],["Parcela","txt"],["Obra","txt"],["Propietario","txt"],["Num_expediente","txt"],["Observaciones","txt"],["Num_plano","txt"],["Fecha_aprobacion","fecha"],["Finalizado","txt"]]');
-echo $carpetas->get_json_data();
+$carpetasClass = new ParserCarpetas($base,$carpeta);
+echo $carpetasClass->getJsonData();
 
 echo '<br><br>';
 
@@ -22,8 +22,10 @@ $nomenClass = new ParserNomencla($base,$carpeta);
 //var_dump($tramitesClass);
 echo $nomenClass->getHtmlData();	
 		
-//echo $nomenClass->getJsonData();	
+echo $nomenClass->getJsonData();	
 
+$expClass = new ParserExpedientes($baseExp,$carpeta);
+echo $expClass->getJsonData();
 ?>
 </body>
 </html>

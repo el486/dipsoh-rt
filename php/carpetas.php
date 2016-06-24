@@ -60,10 +60,9 @@
     data=<?php
 		include("class_lib.php");
 		$base = new ConexionDB ("E:\\DatosGis\\Planos\\baseRT_bs.mdb");
-
-		$carpetas = new ControladorAccess($base,"SELECT * FROM carpetas");
-		$carpetas->set_field_list('[["Num_carpeta","num"],["Partido","num"],["Parcela","txt"],["Obra","txt"],["Propietario","txt"],["Num_expediente","txt"],["Observaciones","txt"],["Num_plano","txt"],["Fecha_aprobacion","fecha"],["Finalizado","txt"]]');
-		echo $carpetas->get_json_data();
+		
+		$carpetasClass = new ParserCarpetas($base,$carpeta);
+		echo $carpetasClass->getJsonData();
 	?>;
 	
 function linkExpedientes(val){
