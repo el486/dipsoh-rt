@@ -58,58 +58,11 @@
 
 <script>
     data=<?php
-		$db = 'E:\\DatosGis\\Planos\\expedientes.accdb';
-		$conn = odbc_connect("Driver={Microsoft Access Driver (*.mdb, *.accdb)}; DBQ=$db",'','') or exit('Cannot open with driver.');
+		include("class_lib.php");
+		$base = new ConexionDB ("E:\\DatosGis\\Planos\\expedientes.accdb");
 		
-		function not_null($var)
-		{
-			if (!is_null($var)){
-				return str_replace(array("\r\n","\r","\""),"-", $var);
-			} else {
-				return '--';
-			}
-		}
-		
-		if(!$conn)
-              exit("Connection Failed: " . $conn);
-        $sql = "SELECT NumExp,
-				TipoExp,
-				Iniciador,
-				Extracto,
-				UbicacionFisica,
-				expedientes.Partido AS NumPart,
-				NomCatastral,
-				Partida,
-				ExpPrincipal,
-				Obra,
-				Oficina,
-				Fecha_actualizacion,
-				Observaciones,
-				partidos.Partido
-				FROM expedientes,partidos
-				WHERE expedientes.Partido=partidos.NumPartido";
-        $rs = odbc_exec($conn, $sql);
-        if(!$rs)
-              exit("Error in SQL");
-		echo '[';
-		while (odbc_fetch_row($rs)){
-		echo '["'.not_null(odbc_result($rs,"NumExp")).'","'
-				.not_null(odbc_result($rs,"TipoExp")).'","'
-				.not_null(odbc_result($rs,"Iniciador")).'","'
-				.not_null(odbc_result($rs,"Extracto")).'","'
-				.not_null(odbc_result($rs,"UbicacionFisica")).'","'
-				.not_null(odbc_result($rs,"NumPart")).'","'
-				.not_null(odbc_result($rs,"Partido")).'","'
-				.not_null(odbc_result($rs,"NomCatastral")).'","'
-				.not_null(odbc_result($rs,"Partida")).'","'
-				.not_null(odbc_result($rs,"ExpPrincipal")).'","'
-				.not_null(odbc_result($rs,"Obra")).'","'
-				.not_null(odbc_result($rs,"Oficina")).'","'
-				.not_null(date_format(date_create(odbc_result($rs,"Fecha_actualizacion")),'d/m/Y')).'","'
-				.not_null(odbc_result($rs,"Observaciones")).'"'
-				.'],';
-		}
-		echo ']';
+		$expClass = new ParserExpedientes($base,$carpeta);
+		echo $expClass->getJsonData();
 	?>;
 	
 function linkExpedientes(val){
