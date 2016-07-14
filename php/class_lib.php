@@ -47,6 +47,7 @@ class ControladorAccess {
 		$this->conn = odbc_connect("DRIVER={Microsoft Access Driver (*.mdb, *.accdb)}; DBQ=$base",'','') or exit('Cannot open with driver.');
 		if(!$this->conn)
 			  exit("Connection Failed: " . $this->conn);
+		
 		$rs = odbc_exec($this->conn, $this->sql);
 		if(!$rs)
 			  exit("Error in SQL");
@@ -84,6 +85,12 @@ abstract class Parser {
 	public function getJsonData(){	
 		return $this->json;	
 	}
+	
+	public function getArrayData(){	
+		$array=json_decode(mb_convert_encoding($this->json,'UTF-8','UTF-8'));
+		return $array;	
+	}	
+	
 }
 
 class ParserTramites extends Parser {
@@ -162,9 +169,9 @@ class ParserCarpetas extends Parser {
 class ParserExpedientes extends Parser {
 
 	public function __construct($db,$numExped){
-	$sql = "SELECT NumExp,TipoExp,Iniciador,Extracto,UbicacionFisica,expedientes.Partido AS NumPart,NomCatastral,Partida,ExpPrincipal,Obra,Oficina,Fecha_actualizacion,Observaciones,partidos.Partido FROM expedientes,partidos WHERE expedientes.Partido=partidos.NumPartido";
-	$fieldList = '[["NumExp","txt"],["TipoExp","txt"],["Iniciador","txt"],["Extracto","txt"],["UbicacionFisica","txt"],["NumPart","num"],["NomCatastral","txt"],["Partida","txt"],["ExpPrincipal","txt"],["Obra","txt"]]';
-	parent::__construct($db,$numCarpeta,$sql,$fieldList);
+	$sql = "SELECT NumExp,TipoExp,Iniciador,Extracto,UbicacionFisica,expedientes.Partido AS NumPart,partidos.Partido AS Partido,NomCatastral,Partida,ExpPrincipal,Obra,Oficina,Fecha_actualizacion,Observaciones,partidos.Partido FROM expedientes,partidos WHERE expedientes.Partido=partidos.NumPartido";
+	$fieldList = '[["NumExp","txt"],["TipoExp","txt"],["Iniciador","txt"],["Extracto","txt"],["UbicacionFisica","txt"],["NumPart","num"],["Partido","txt"],["NomCatastral","txt"],["Partida","txt"],["ExpPrincipal","txt"],["Obra","txt"],["Oficina","num"]]';
+	parent::__construct($db,$numExped,$sql,$fieldList);
 	}
 }
 ?>
