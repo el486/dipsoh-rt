@@ -25,25 +25,8 @@ class ControladorAccess {
 	$this->field_list = $new_field_list;
 	}
 	
-	private function not_null($var,$tipo){
-		$value='';
-			if (!is_null($var)){
-				if ($tipo!='num') $value.='"';
-				if ($tipo=='fecha'){
-					$value .= date_format(date_create($var),"d/m/Y");
-				} else {
-					$value .= str_replace(array("\r\n","\r","\""),"-", $var);
-				}
-				if ($tipo!='num') $value.='"';
-			} else {
-				$value = '"--"';
-			}
-		return $value;
-		}
-		
-	public function get_json_data() {
-		$lista = json_decode($this->field_list);
-		$base = $this->db->getDB();
+	public function get_array_data() {
+	$base = $this->db->getDB();
 		$this->conn = odbc_connect("DRIVER={Microsoft Access Driver (*.mdb, *.accdb)}; DBQ=$base",'','') or exit('Cannot open with driver.');
 		if(!$this->conn)
 			  exit("Connection Failed: " . $this->conn);
@@ -51,20 +34,22 @@ class ControladorAccess {
 		$rs = odbc_exec($this->conn, $this->sql);
 		if(!$rs)
 			  exit("Error in SQL");
-		$value = '[';
-		while (odbc_fetch_row($rs)){
-			$value .= '[';
-			foreach ($lista as $valor) {
-				$value .= $this->not_null(odbc_result($rs,$valor[0]),$valor[1]).',';
+		while ($arr = odbc_fetch_array($rs)){	  
+			$array[] = $arr;
 			}
-			$value .='],';
-		}
-		$value .= ']';
-		$value = str_replace(",]","]",$value);
-		odbc_close_all ();
-		//$value = utf8_encode($value);
-		return $value;
+		return $array;
 	}
+	
+	public function get_json_data() {
+		function valores($a){
+			//date_format(date_create($var),"d/m/Y");
+			return array_values($a);
+			}
+		$array=$this->get_array_data();
+		$result=array_map("valores",$array);
+		return json_encode($result);
+	}
+	
 }
 
 abstract class Parser {
@@ -72,6 +57,7 @@ abstract class Parser {
 	protected $filtro;
 	protected $fieldList;
 	protected $json;
+	protected $coleccion;
 	
 	protected function __construct($db,$filtro,$sql,$fieldList){
 	$this->filtro = $filtro;
@@ -79,7 +65,9 @@ abstract class Parser {
 	$this->fieldList = $fieldList;
 	$data = new ControladorAccess($db,$this->sql);
 	$data->set_field_list($this->fieldList);
-	$this->json = $data->get_json_data();	
+	$this->coleccion = $data->get_array_data();	
+	$this->json = $data->get_json_data();
+	
 	}
 	
 	public function getJsonData(){	
@@ -87,12 +75,12 @@ abstract class Parser {
 	}
 	
 	public function getArrayData(){	
-		$array=json_decode(mb_convert_encoding($this->json,'UTF-8','UTF-8'));
-		return $array;	
+		//$array=json_decode(mb_convert_encoding($this->json,'UTF-8','UTF-8'));
+		return $this->coleccion;	
 	}	
 	
 	public function getArrayFilter($campo,$filtro){
-	$array = $this->getArrayData();
+	$array = $this->coleccion;
 	$salida = array();
 	foreach ($array as $elemento) {
 		if ($elemento[$campo]==$filtro) $salida[]=$elemento;

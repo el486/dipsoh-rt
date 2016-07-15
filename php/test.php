@@ -1,7 +1,7 @@
 </head>
 <body>
 <?php
-include("class_lib.php");
+include("class_lib_array.php");
 $carpeta = $_REQUEST['carpeta'];
 $campo = $_REQUEST['campo'];
 $filtro = $_REQUEST['filtro'];
@@ -33,18 +33,19 @@ echo $expClass->getJsonData();
 echo '<br><br>';
 
 $array2 = $expClass->getArrayData();
-//var_dump($array2);
-
-function filtroPartidos($array,$campo,$filtro){
-	foreach ($array as $elemento) {
-	if ($elemento[$campo]==$filtro) $salida[]=$elemento;
-	}
-	return $salida;
-}
+var_dump($array2);
 
 echo '<br>campo: '.$campo.'<br>filtro: '.$filtro.'<br><br>';
-$filtro=filtroPartidos($array2,$campo,$filtro);
+$filtro=$expClass->getArrayFilter($campo,$filtro);
+
+foreach ($filtro as $elemento) {
+		$suma+=$elemento[5];
+		}
+echo '<br>Suma: '.$suma.'<br>';
+		
 var_dump($filtro);
+echo '<br><br>';
+echo json_encode($filtro);
 ?>
 </body>
 </html>

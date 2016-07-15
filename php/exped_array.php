@@ -58,7 +58,7 @@
 
 <script>
     data=<?php
-		include("class_lib.php");
+		include("class_lib_array.php");
 		$base = new ConexionDB ("E:\\DatosGis\\Planos\\expedientes.accdb");
 		
 		$expClass = new ParserExpedientes($base,$carpeta);
@@ -87,7 +87,7 @@ Ext.onReady(function(){
 		   {name: 'exppal'},
 		   {name: 'obra'},
 		   {name: 'ofi'},
-		   {name: 'fechaact'},
+		   {name: 'fechaact'/*, dateFormat:'dd-mm-yyyy', type: 'date'*/},
 		   {name: 'obs'}
     ]);
     
