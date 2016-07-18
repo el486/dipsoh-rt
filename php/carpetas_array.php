@@ -2,7 +2,7 @@
 		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Consulta de Expedientes de la oficina</title>
+<title>Consulta de carpetas abiertas</title>
 <meta http-equiv="content-type" content="text/html; charset=LATIN1">
 
     <!-- ** CSS ** -->
@@ -10,13 +10,13 @@
     <link rel="stylesheet" type="text/css" href="../css/ext-all.css" />
 	<link rel="stylesheet" type="text/css" href="../css/xtheme-blue.css" />
 	
-			<style type="text/css">
+	<style type="text/css">
 		html,body{
 			margin:20;
 			padding:10px 20px 10px 20px;
 			font:normal 18px arial,tahoma, helvetica, sans-serif;
 		}
-
+	
 		.digitsi .x-grid3-cell { 
 			background-color: #ffe2e2; 
 			font:normal 12px arial,tahoma, helvetica, sans-serif;
@@ -32,15 +32,15 @@
 		.x-grid3-cell-inner, .x-grid3-hd-inner {
 		  white-space: normal; /* changed from nowrap */
 		}
-		
-		</style>
+
+	</style>
 
     <!-- ExtJS library: base/adapter -->
     <script type="text/javascript" src="../js/ext-base.js"></script>
 
     <!-- ExtJS library: all widgets -->
     <script type="text/javascript" src="../js/ext-all.js"></script>
-	<script src="../js/Exporter-all.js" type="text/javascript"></script>
+	<script type="text/javascript" src="../js/Exporter-all.js"></script>
 	<script type="text/javascript" src="../js/ext-lang-es.js"></script>
 	<!-- extensions -->
 	<link rel="stylesheet" type="text/css" href="../js/gridfilters/css/RangeMenu.css" />
@@ -59,36 +59,96 @@
 <script>
     data=<?php
 		include("class_lib_array.php");
-		$base = new ConexionDB ("E:\\DatosGis\\Planos\\expedientes.accdb");
+		$base = new ConexionDB ("E:\\DatosGis\\Planos\\baseRT_bs.mdb");
 		
-		$expClass = new ParserExpedientes($base,$carpeta);
-		echo $expClass->getJsonData();
+		$carpetasClass = new ParserCarpetas($base,$carpeta);
+		echo $carpetasClass->getJsonData();
 	?>;
 	
 function linkExpedientes(val){
 var val2=val.replace('/','-').replace(' Alc:','-').replace(' Cpo:','-').replace(' ','');
 var array=val2.split('-');
-return '<a href="http://sistemas.gba.gov.ar/consulta/expedientes/movimientos.php?caract='+array[0]+'&nroexp='+array[1]+'&anioexp='+array[2]+'&alcance='+array[3]+'&nrocuerpo='+array[4]+'" target="_blank">'+val+'</a>'
+return '<a href="http://sistemas.gba.gov.ar/consulta/expedientes/movimientos.php?caract='+array[0]+'&nroexp='+array[1]+'&anioexp='+array[2]+'&alcance=0&nrocuerpo=1" target="_blank">'+val+'</a>'
+}
+	
+function popupTramites(value){
+    
+	var url='tramites.php?carpeta='+value;
+	Ext.Ajax.request({
+    url:url,
+    success: function(response){
+        // response.responseText will have your html content
+
+		var win;
+			if(!win){
+				win = new Ext.Window({
+					title:'Tramites de la carpeta '+value,
+					width: 600,
+					height: 300,
+					closeAction :'hide',
+					modal: true, 
+					html: response.responseText,
+					//overflow:'auto', 
+					autoScroll:'true',
+					buttons: [{
+						text     : 'Cerrar',
+						handler  : function(){
+							win.hide();
+						}
+					}]
+				});
+				win.show();
+			} 
+	  }
+	});
+}
+
+function popupNomencla(value){
+    
+	var url='nomencla.php?carpeta='+value;
+	Ext.Ajax.request({
+    url:url,
+    success: function(response){
+        // response.responseText will have your html content
+		var win;
+			if(!win){
+				win = new Ext.Window({
+					title:'Nomenclatura de la carpeta '+value,
+					width: 300,
+					height: 300,
+					closeAction :'hide',
+					modal: true, 
+					html: response.responseText,
+					//overflow:'auto', 
+					autoScroll:'true',
+					buttons: [{
+						text     : 'Cerrar',
+						handler  : function(){
+							win.hide();
+						}
+					}]
+				});
+				win.show();
+			} 
+	  }
+	});
 }
 
 Ext.onReady(function(){
-	console.log(data);
+	//console.log(data);
     
 	var reader = new Ext.data.ArrayReader({}, [
-		   {name: 'num_exp'},
-		   {name: 'tipo'},
-		   {name: 'iniciador'},
-		   {name: 'extracto'},
-		   {name: 'ubicacion'},
-		   {name: 'numpart'},
+		   {name: 'num_carpeta'},
 		   {name: 'partido'},
-		   {name: 'catastral'},
-		   {name: 'partida'},
-		   {name: 'exppal'},
+		   {name: 'parcela'},
 		   {name: 'obra'},
-		   {name: 'ofi'},
-		   {name: 'fechaact'},
-		   {name: 'obs'}
+		   {name: 'prop'},
+		   {name: 'exped'},
+		   {name: 'obs'},
+		   {name: 'numpla'},
+		   {name: 'aprobado'},
+		   {name: 'fin'}
+		   
     ]);
     
 	var store = new Ext.data.GroupingStore({
@@ -96,7 +156,7 @@ Ext.onReady(function(){
 			reader: reader,
 			//groupOnSort: true,
 			//remoteSort: true,
-			groupField: 'num_exp',
+			groupField: 'num_carpeta',
 			data:data
 			});
 	
@@ -104,7 +164,7 @@ Ext.onReady(function(){
             forceFit:true,
             groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "Items" : "Item"]})',
 			getRowClass: function(record) { 
-						return record.get('ofi') == '0' ? 'digitsi' : 'digitno'; 
+						return record.get('fin') == '1' ? 'digitsi' : 'digitno'; 
 						} 
         });
 		
@@ -114,34 +174,25 @@ Ext.onReady(function(){
         local: true,   // defaults to false (remote filtering)
         filters: [{
             type: 'string',
-            dataIndex: 'num_exp'
+            dataIndex: 'num_carpeta'
         }, {
             type: 'string',
-            dataIndex: 'iniciador'
+            dataIndex: 'exped'
         }, {
             type: 'string',
-            dataIndex: 'extracto'
+            dataIndex: 'parcela'
         }, {
-            type: 'numeric',
-            dataIndex: 'numpart'
-        },{
-            type: 'numeric',
-            dataIndex: 'partida'
+            type: 'string',
+            dataIndex: 'partido'
         }, {
             type: 'string',
             dataIndex: 'obra'
-        }, {
-            type: 'string',
-            dataIndex: 'tipo'
-        }, {
-            type: 'string',
-            dataIndex: 'catastral'
         },{
             type: 'string',
-            dataIndex: 'partido'
+            dataIndex: 'prop'
         },{
             type: 'string',
-            dataIndex: 'ubicacion'
+            dataIndex: 'numpla'
         }
 		
 		/*, {
@@ -154,32 +205,57 @@ Ext.onReady(function(){
             dataIndex: 'visible'
         }*/]
     });    
-	
+		
 	var grid = new Ext.grid.GridPanel({
         store: store,
 		plugins: [filters],
 		columnLines: true,
-		tbar:[],
+		tbar:[],		
 		//cls: 'custom-grid', 
 		id:'CargaDWG',
         columns: [
-            {header: "NumExp", width: 100, dataIndex: 'num_exp', sortable: true, filterable: true,
+            {header: "Carpeta", width: 50, dataIndex: 'num_carpeta', sortable: true, filterable: true,
 			renderer: function (val,params,record) {
-				return linkExpedientes(val);
+				return '<a href="javascript:popupTramites(\''+val+'\')">'+val+'</a>';
 				}
 			},
-			{header: "Tipo", width: 100, dataIndex: 'tipo', sortable: true, filterable: true},
-			{header: "Iniciador", width: 150, dataIndex: 'iniciador', sortable: true, filterable: true},
-			{header: "Extracto", width: 200, dataIndex: 'extracto', sortable: true, filterable: true},
-			{header: "Ubicacion", width: 100, dataIndex: 'ubicacion', sortable: true, filterable: true},
-			{header: "Partido", width: 50, dataIndex: 'numpart', sortable: true, filterable: true},
-			{header: "Nombre", width: 100, dataIndex: 'partido', sortable: true, filterable: true},
-			{header: "Nomenclatura", width: 150, dataIndex: 'catastral', sortable: true, filterable: true},
-			{header: "Partida", width: 50, dataIndex: 'partida', sortable: true, filterable: true},
-			{header: "Obra", width: 200, dataIndex: 'obra', sortable: true, filterable: true},
-			{header: "Observaciones", width: 200, dataIndex: 'obs', sortable: true, filterable: true},
-			{header: "Exped.Ppal", width: 100, dataIndex: 'exppal', sortable: true, filterable: true},
-			{header: "Actualizado", width: 100, dataIndex: 'fechaact', sortable: true, filterable: true,
+			{header: "Expediente", width: 150, dataIndex: 'exped', sortable: true, filterable: true,
+			renderer: function (val,params,record) {
+				if (val!=null){
+					var arr=val.split(' ');
+					var cadena='';
+					for (index = 0; index < arr.length; ++index) {
+						cadena+=linkExpedientes(arr[index])+'<br>';
+						}
+					return cadena;
+					}
+					else
+					{return "-"}
+				}
+			},
+			{header: "Partido", width: 50, dataIndex: 'partido', sortable: true, filterable: true},
+			{header: "Parcela", width: 150, dataIndex: 'parcela', sortable: true, filterable: true,
+			renderer: function (val,params,record) {
+				return '<a href="javascript:popupNomencla(\''+record.get('num_carpeta')+'\')">'+val+'</a>';
+				}
+			},
+			{header: "Obra", width: 300, dataIndex: 'obra', sortable: true, filterable: true},
+			{header: "Propietario", width: 300, dataIndex: 'prop', sortable: true, filterable: true},
+			{header: "Plano", width: 70, dataIndex: 'numpla', sortable: true, filterable: true,
+			renderer: function (val,params,record) {
+				if (val!=null){
+					var arr=val.split(' ');
+					var cadena='';
+					for (index = 0; index < arr.length; ++index) {
+						cadena+='<a href="http://www.mosp.gba.gov.ar/sig_hidraulica/planos/planos.asp?numpla='+arr[index]+'" target="_new">'+arr[index]+'</a><br>';
+						}
+					return cadena;
+					}
+					else
+					{return "-";}					
+				}
+			},
+			{header: "Aprobado", width: 70, dataIndex: 'aprobado', sortable: true,
 				renderer: function (val,params,record) {
 					if (val!=null){
 						var val2=val.replace(' ','-');
@@ -189,7 +265,8 @@ Ext.onReady(function(){
 					else return "-";
 					}
 			},
-			{header: "Ofi", width: 20, dataIndex: 'ofi', sortable: true, filterable: true}
+			{header: "Observaciones", width: 300, dataIndex: 'obs', sortable: true},
+			{header: "Fin", width: 30, dataIndex: 'fin', sortable: true},
 			
         ],
 		view: vista,
@@ -220,19 +297,19 @@ Ext.onReady(function(){
         }
 		
 		],
-        height:700
+        height:600
     });
 	
 	var exportButton = new Ext.ux.Exporter.Button({
-	component: grid,
-	text     : "Descargar todo como archivo de excel"
+	  component: grid,
+	  text     : "Descargar todo como archivo de excel"
 	});
-
+	
 	grid.getTopToolbar().add(exportButton);
+	
 	store.clearGrouping();
 	grid.render('grid');
 	//console.log(store);
-	
 	});
 
 
@@ -240,15 +317,13 @@ Ext.onReady(function(){
 
 </head>
 <body>
-    <h1 id="title">Expedientes</h1>
+    <h1 id="title">Carpetas</h1>
 	<br>
 	<div id="grid"></div>
-    <div id="infoDIV">
-	Busquedas: CTRL+F <br>
-	<br>
+<div id="infoDIV">
 	<a href="http://192.168.1.13:8080/heron/rt/index.htm" target="_new">VOLVER AL MENU</a><br>
-	<!--a href="http://192.168.1.13:8080/heron/rt/php/exped.php" target="_new">EXPEDIENTES</a><br-->
-	<a href="http://192.168.1.13:8080/heron/rt/php/carpetas.php" target="_new">CARPETAS</a><br>
+	<a href="http://192.168.1.13:8080/heron/rt/php/exped.php" target="_new">EXPEDIENTES</a><br>
+	<!--a href="http://192.168.1.13:8080/heron/rt/php/carpetas.php" target="_new">CARPETAS</a><br-->
 	<a href="http://www.mosp.gba.gov.ar/sig_hidraulica/planos/planos.asp" target="_blank">PLANOS FINALIZADOS</a><br>
 	<br>
 	<a href="http://www.mosp.gba.gov.ar/sig_hidraulica/visor/index.php" target="_blank">VISOR SIG DiPSOH</a><br>

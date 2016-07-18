@@ -8,7 +8,7 @@ $filtro = $_REQUEST['filtro'];
 $base = new ConexionDB ("E:\\DatosGis\\Planos\\baseRT_bs.mdb");
 $baseExp = new ConexionDB ("E:\\DatosGis\\Planos\\expedientes.accdb");
 if (is_null($carpeta)) $carpeta=0; 
-/*
+
 $carpetasClass = new ParserCarpetas($base,$carpeta);
 echo $carpetasClass->getJsonData();
 echo '<br><br>';
@@ -27,7 +27,8 @@ echo $nomenClass->getHtmlData();
 echo '<br><br>';		
 echo $nomenClass->getJsonData();	
 echo '<br><br>';
-*/
+
+/*
 $expClass = new ParserExpedientes($baseExp,$carpeta);
 echo $expClass->getJsonData();
 echo '<br><br>';
@@ -39,13 +40,14 @@ echo '<br>campo: '.$campo.'<br>filtro: '.$filtro.'<br><br>';
 $filtro=$expClass->getArrayFilter($campo,$filtro);
 
 foreach ($filtro as $elemento) {
-		$suma+=$elemento[5];
+		$suma+=$elemento["NumPart"];
 		}
 echo '<br>Suma: '.$suma.'<br>';
 		
 var_dump($filtro);
 echo '<br><br>';
 echo json_encode($filtro);
+*/
 ?>
 </body>
 </html>

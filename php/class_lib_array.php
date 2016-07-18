@@ -14,19 +14,14 @@ class ControladorAccess {
 	private $db;
 	private $conn;
 	private $sql;
-	private $field_list;
-
+	
 	public function __construct($db,$sql) {
 		$this->db = $db;
 		$this->sql = $sql;
 	}
 	
-	public function set_field_list($new_field_list) {
-	$this->field_list = $new_field_list;
-	}
-	
 	public function get_array_data() {
-	$base = $this->db->getDB();
+		$base = $this->db->getDB();
 		$this->conn = odbc_connect("DRIVER={Microsoft Access Driver (*.mdb, *.accdb)}; DBQ=$base",'','') or exit('Cannot open with driver.');
 		if(!$this->conn)
 			  exit("Connection Failed: " . $this->conn);
@@ -41,12 +36,9 @@ class ControladorAccess {
 	}
 	
 	public function get_json_data() {
-		function valores($a){
-			//date_format(date_create($var),"d/m/Y");
-			return array_values($a);
-			}
+		
 		$array=$this->get_array_data();
-		$result=array_map("valores",$array);
+		$result=array_map(function($a){return array_values($a);},$array);
 		return json_encode($result);
 	}
 	
@@ -55,16 +47,13 @@ class ControladorAccess {
 abstract class Parser {
 	protected $sql;
 	protected $filtro;
-	protected $fieldList;
 	protected $json;
 	protected $coleccion;
 	
-	protected function __construct($db,$filtro,$sql,$fieldList){
+	protected function __construct($db,$filtro,$sql){
 	$this->filtro = $filtro;
 	$this->sql = $sql;
-	$this->fieldList = $fieldList;
 	$data = new ControladorAccess($db,$this->sql);
-	$data->set_field_list($this->fieldList);
 	$this->coleccion = $data->get_array_data();	
 	$this->json = $data->get_json_data();
 	
@@ -75,7 +64,6 @@ abstract class Parser {
 	}
 	
 	public function getArrayData(){	
-		//$array=json_decode(mb_convert_encoding($this->json,'UTF-8','UTF-8'));
 		return $this->coleccion;	
 	}	
 	
@@ -93,13 +81,12 @@ class ParserTramites extends Parser {
 
 	public function __construct($db,$numCarpeta){
 	$sql = "SELECT Num_carpeta,Tramite,Aprobado,Fecha_recibido FROM tramites t,lista_tramites l WHERE t.Id_tramite=l.Id_tramite AND Num_carpeta=$numCarpeta";
-	$fieldList = '[["Num_carpeta","num"],["Tramite","txt"],["Aprobado","num"],["Fecha_recibido","fecha"]]';
-	parent::__construct($db,$numCarpeta,$sql,$fieldList);
+	parent::__construct($db,$numCarpeta,$sql);
 	}
 	
 	private function fecha($fecha){
 				if (!is_null($fecha)){
-					return $fecha;
+					return date_format(date_create($fecha),"d/m/Y");
 				} else {
 					return '(en Tramite)';
 				}
@@ -128,9 +115,8 @@ class ParserTramites extends Parser {
 class ParserNomencla extends Parser {
 
 	public function __construct($db,$numCarpeta){
-	$sql = "SELECT * FROM carpetas WHERE Num_carpeta=$numCarpeta";
-	$fieldList = '[["Partido","num"],["Circunscripcion","txt"],["Seccion","txt"],["Chacra","txt"],["Quinta","txt"],["Fraccion","txt"],["Manzana","txt"],["Parcela","txt"]]';
-	parent::__construct($db,$numCarpeta,$sql,$fieldList);
+	$sql = "SELECT Partido,Circunscripcion,Seccion,Chacra,Quinta,Fraccion,Manzana,Parcela FROM carpetas WHERE Num_carpeta=$numCarpeta";
+	parent::__construct($db,$numCarpeta,$sql);
 	}
 	
 	public function getHtmlData(){	
@@ -156,9 +142,8 @@ class ParserNomencla extends Parser {
 class ParserCarpetas extends Parser {
 
 	public function __construct($db,$numCarpeta){
-	$sql = "SELECT * FROM carpetas";
-	$fieldList = '[["Num_carpeta","num"],["Partido","num"],["Parcela","txt"],["Obra","txt"],["Propietario","txt"],["Num_expediente","txt"],["Observaciones","txt"],["Num_plano","txt"],["Fecha_aprobacion","fecha"],["Finalizado","txt"]]';
-	parent::__construct($db,$numCarpeta,$sql,$fieldList);
+	$sql = "SELECT Num_carpeta,Partido,Parcela,Obra,Propietario,Num_expediente,Observaciones,Num_plano,Fecha_aprobacion,Finalizado FROM carpetas";
+	parent::__construct($db,$numCarpeta,$sql);
 	}
 }
 
@@ -166,8 +151,7 @@ class ParserExpedientes extends Parser {
 
 	public function __construct($db,$numExped){
 	$sql = "SELECT NumExp,TipoExp,Iniciador,Extracto,UbicacionFisica,expedientes.Partido AS NumPart,partidos.Partido AS Partido,NomCatastral,Partida,ExpPrincipal,Obra,Oficina,Fecha_actualizacion,Observaciones,partidos.Partido FROM expedientes,partidos WHERE expedientes.Partido=partidos.NumPartido";
-	$fieldList = '[["NumExp","txt"],["TipoExp","txt"],["Iniciador","txt"],["Extracto","txt"],["UbicacionFisica","txt"],["NumPart","num"],["Partido","txt"],["NomCatastral","txt"],["Partida","txt"],["ExpPrincipal","txt"],["Obra","txt"],["Oficina","num"]]';
-	parent::__construct($db,$numExped,$sql,$fieldList);
+	parent::__construct($db,$numExped,$sql);
 	}
 }
 ?>
