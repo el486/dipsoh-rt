@@ -5,10 +5,19 @@ include("class_lib_array.php");
 $carpeta = $_REQUEST['carpeta'];
 $campo = $_REQUEST['campo'];
 $filtro = $_REQUEST['filtro'];
+$partido = $_REQUEST['partido'];
+$anio = $_REQUEST['anio'];
 $base = new ConexionDB ("E:\\DatosGis\\Planos\\baseRT_bs.mdb");
 $baseExp = new ConexionDB ("E:\\DatosGis\\Planos\\expedientes.accdb");
+$baseCel = new ConexionDB ("E:\\DatosGis\\Planos\\Database101.mdb");
 if (is_null($carpeta)) $carpeta=0; 
 
+$insertTram = new InsertarTramite($base,30,6,'1/1/2007','1/1/2100',0,'nada');
+//echo $insertTram;
+echo '<br>';
+echo $insertTram->sql;
+
+/*
 $carpetasClass = new ParserCarpetas($base,$carpeta);
 echo $carpetasClass->getJsonData();
 echo '<br><br>';
@@ -28,7 +37,7 @@ echo '<br><br>';
 echo $nomenClass->getJsonData();	
 echo '<br><br>';
 
-/*
+
 $expClass = new ParserExpedientes($baseExp,$carpeta);
 echo $expClass->getJsonData();
 echo '<br><br>';
@@ -47,6 +56,9 @@ echo '<br>Suma: '.$suma.'<br>';
 var_dump($filtro);
 echo '<br><br>';
 echo json_encode($filtro);
+
+$celulares = new ControladorAccess($baseCel,"select * from lineas_por_grupo");
+echo $celulares->get_json_data();
 */
 ?>
 </body>

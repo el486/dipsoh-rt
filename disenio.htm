@@ -1,0 +1,582 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Refacturacion de celulares</title>
+<meta http-equiv="content-type" content="text/html; charset=LATIN1">
+
+    <!-- ** CSS ** -->
+    <!-- base library -->
+    <link rel="stylesheet" type="text/css" href="./css/ext-all.css" />
+	<link rel="stylesheet" type="text/css" href="./css/xtheme-blue.css" />
+	
+			<style type="text/css">
+		html,body{
+			margin:20;
+			padding:10px 20px 10px 20px;
+			font:normal 18px arial,tahoma, helvetica, sans-serif;
+		}
+
+		.digitsi .x-grid3-cell { 
+			background-color: #ffe2e2; 
+			font:normal 12px arial,tahoma, helvetica, sans-serif;
+			color: #000; 
+		} 
+		 
+		.digitno .x-grid3-cell { 
+			background-color: #e2ffe2;
+			font:normal 12px arial,tahoma, helvetica, sans-serif;
+			color: #000; 
+		}
+		
+		.x-grid3-cell-inner, .x-grid3-hd-inner {
+		  white-space: normal; /* changed from nowrap */
+		}
+		
+		</style>
+
+    <!-- ExtJS library: base/adapter -->
+    <script type="text/javascript" src="./js/ext-base.js"></script>
+
+    <!-- ExtJS library: all widgets -->
+    <script type="text/javascript" src="./js/ext-all.js"></script>
+	<script type="text/javascript" src="./js/ext-lang-es.js"></script>
+	<!-- extensions -->
+	<script type="text/javascript" src="./js/CheckColumn.js"></script>
+	<script type="text/javascript" src="./js/FileUploadField.js"></script>
+
+
+<script>
+    data=[[false,"209302943266","Mauro","Empresa","15988028"],[false,"209302943266","Juan","Empresa","26683694"],[false,"209302943266","Jose","Empresa","27081389"],[false,"209302943266","Fulano","Empresa","28867018"],[false,"209302943266","Pedro","Empresa","32228539"],[false,"209302943266","María","Empresa","34344252"],[false,"209302943266","Susana","Empresa","34344339"],[false,"209302943266","Martin","Empresa","34344435"],[false,"209302943266","Ramiro","Empresa","34345341"],[false,"209302943266","Gustavo","Empresa","34345342"],[false,"209302943266","Karina","Empresa","34345343"],[false,"209302943266","Leandro","Empresa","34667947"],[false,"209302943266","Pedro","Empresa","34694913"],[false,"209302943266","Jimena","Empresa","35633993"],[false,"209302943266","Laura","Empresa","36625702"],[false,"209302943266","016","Fulano","36883890"],[false,"209302943266","Mercedes","Empresa","37022699"],[false,"209302943266","018","Fulano","37283314"],[false,"209302943266","019","Fulano","38131860"],[false,"209302943266","020","Fulano","38336261"],[false,"209302943266","021","Fulano","40684026"],[false,"209302943266","022","Fulano","40709160"],[false,"209302943266","023","Fulano","41241119"],[false,"209302943266","024","Fulano","4317173"],[false,"209302943266","025","Fulano","4317181"],[false,"209302943266","026","Fulano","4328618"],[false,"209302943266","0","Fulano","43474131"],[false,"209302943266","0","Fulano","43725872"],[false,"209302943266","0","Fulano","43816209"],[false,"209302943266","0","Fulano","4461246"],[false,"209302943266","0","Fulano","4482698"],[false,"209302943266","0","Fulano","47912906"],[false,"209302943266","0","Fulano","48242897"],[false,"209302943266","0","Fulano","4833135"],[false,"209302943266","0","Fulano","4835188"],[false,"209302943266","0","Fulano","48826078"],[false,"209302943266","0","Fulano","56728494"],[false,"209302943266","0","Fulano","56728495"],[false,"209302943266","0","Fulano","6080721"],[false,"209302943266","0","Fulano","6080783"],[false,"209302943266","0","Fulano","6101648"],[false,"209302943266","0","Fulano","6249663"],[false,"209302943266","0","Fulano","6470751"],[false,"209302943266","0","Fulano","6498794"],[false,"209302943266","0","Fulano","6515852"],[false,"209302943266","0","Fulano","71130473"],[false,"209302943266","0","Fulano","71342093"],[false,"209302943266","0","Fulano","71342913"],[false,"209302943266","0","Fulano","7713100"],[false,"209302943266","0","Fulano","9856806"],[false,"209302943266","0","Fulano","9965634"],[false,"209302943266","0","Fulano","9965636"],[false,"209302943266","1","Mauro","15026281"],[false,"209302943266","1","Mauro","15348520"],[false,"209302943266","1","Mauro","15988026"],[false,"209302943266","1","Mauro","15988027"],[false,"209302943266","1","Mauro","16615628"],[false,"209302943266","1","Mauro","16615663"],[false,"209302943266","1","Mauro","16615671"],[false,"209302943266","1","Mauro","22024784"],[false,"209302943266","1","Mauro","22024806"],[false,"209302943266","1","Mauro","25806889"],[false,"209302943266","1","Mauro","28866944"],[false,"209302943266","1","Mauro","34344253"],[false,"209302943266","1","Mauro","39804017"],[false,"209302943266","1","Mauro","40683898"],[false,"209302943266","1","Mauro","4317172"],[false,"209302943266","1","Mauro","6078698"],[false,"209302943266","1","Mauro","6078699"],[false,"209302943266","1","Mauro","6078706"],[false,"209302943266","1","Mauro","6078709"],[false,"209302943266","1","Mauro","6078714"],[false,"209302943266","1","Mauro","6078715"],[false,"209302943266","1","Mauro","6078719"],[false,"209302943266","1","Mauro","6078720"],[false,"209302943266","1","Mauro","6078725"],[false,"209302943266","1","Mauro","6078730"],[false,"209302943266","1","Mauro","6078734"],[false,"209302943266","1","Mauro","6078736"],[false,"209302943266","1","Mauro","6078738"],[false,"209302943266","1","Mauro","6078740"],[false,"209302943266","1","Mauro","6078743"],[false,"209302943266","1","Mauro","6078747"],[false,"209302943266","1","Mauro","6078750"],[false,"209302943266","1","Mauro","6078757"],[false,"209302943266","1","Mauro","6078762"],[false,"209302943266","1","Mauro","6078765"],[false,"209302943266","1","Mauro","6078767"],[false,"209302943266","1","Mauro","6078769"],[false,"209302943266","1","Mauro","6078773"],[false,"209302943266","1","Mauro","6079086"],[false,"209302943266","1","Mauro","6079087"],[false,"209302943266","1","Mauro","6079090"],[false,"209302943266","1","Mauro","6079092"],[false,"209302943266","1","Mauro","6079106"],[false,"209302943266","1","Mauro","6079110"],[false,"209302943266","1","Mauro","6079117"],[false,"209302943266","1","Mauro","6079121"],[false,"209302943266","1","Mauro","6079129"],[false,"209302943266","1","Mauro","6079133"],[false,"209302943266","1","Mauro","6079134"],[false,"209302943266","1","Mauro","6079137"],[false,"209302943266","1","Mauro","6079145"],[false,"209302943266","1","Mauro","6079151"],[false,"209302943266","1","Mauro","6079153"],[false,"209302943266","1","Mauro","6079158"],[false,"209302943266","1","Mauro","6079162"],[false,"209302943266","1","Mauro","6079265"],[false,"209302943266","1","Mauro","6079320"],[false,"209302943266","1","Mauro","6079321"],[false,"209302943266","1","Mauro","6079331"],[false,"209302943266","1","Mauro","6079691"],[false,"209302943266","1","Mauro","6079708"],[false,"209302943266","1","Mauro","6079709"],[false,"209302943266","1","Mauro","6079784"],[false,"209302943266","1","Mauro","6082629"],[false,"209302943266","1","Mauro","6082633"],[false,"209302943266","1","Mauro","6082862"],[false,"209302943266","2","Juan","14307291"],[false,"209302943266","2","Juan","15988025"],[false,"209302943266","2","Juan","22024696"],[false,"209302943266","2","Juan","27604417"],[false,"209302943266","2","Juan","36424838"],[false,"209302943266","2","Juan","38930280"],[false,"209302943266","2","Juan","6080716"],[false,"209302943266","2","Juan","6080756"],[false,"209302943266","2","Juan","6080806"],[false,"209302943266","2","Juan","6080814"],[false,"209302943266","2","Juan","6080826"],[false,"209302943266","2","Juan","6080828"],[false,"209302943266","2","Juan","6080839"],[false,"209302943266","2","Juan","6080843"],[false,"209302943266","2","Juan","6080853"],[false,"209302943266","2","Juan","6080856"],[false,"209302943266","2","Juan","6080868"],[false,"209302943266","2","Juan","6080876"],[false,"209302943266","2","Juan","6080887"],[false,"209302943266","2","Juan","6080891"],[false,"209302943266","2","Juan","6080908"],[false,"209302943266","2","Juan","6080918"],[false,"209302943266","2","Juan","6080930"],[false,"209302943266","2","Juan","6080939"],[false,"209302943266","2","Juan","6080946"],[false,"209302943266","2","Juan","6080962"],[false,"209302943266","2","Juan","6080965"],[false,"209302943266","2","Juan","6080977"],[false,"209302943266","2","Juan","6080990"],[false,"209302943266","2","Juan","6080996"],[false,"209302943266","2","Juan","6081015"],[false,"209302943266","2","Juan","6081016"],[false,"209302943266","2","Juan","6081064"],[false,"209302943266","2","Juan","6081066"],[false,"209302943266","2","Juan","6081069"],[false,"209302943266","2","Juan","6081089"],[false,"209302943266","2","Juan","6081093"],[false,"209302943266","2","Juan","6081104"],[false,"209302943266","2","Juan","6081124"],[false,"209302943266","2","Juan","6081165"],[false,"209302943266","2","Juan","6081173"],[false,"209302943266","2","Juan","6081189"],[false,"209302943266","2","Juan","6081205"],[false,"209302943266","2","Juan","6081206"],[false,"209302943266","2","Juan","6081257"],[false,"209302943266","2","Juan","6081276"],[false,"209302943266","2","Juan","6081287"],[false,"209302943266","2","Juan","6081333"],[false,"209302943266","2","Juan","6081338"],[false,"209302943266","2","Juan","6081353"],[false,"209302943266","2","Juan","6081378"],[false,"209302943266","2","Juan","6081380"],[false,"209302943266","2","Juan","6081382"],[false,"209302943266","2","Juan","6081385"],[false,"209302943266","2","Juan","6081389"],[false,"209302943266","2","Juan","6081393"],[false,"209302943266","2","Juan","6081394"],[false,"209302943266","2","Juan","6081395"],[false,"209302943266","2","Juan","6081411"],[false,"209302943266","2","Juan","6081413"],[false,"209302943266","2","Juan","6081421"],[false,"209302943266","2","Juan","6081437"],[false,"209302943266","2","Juan","6081450"],[false,"209302943266","2","Juan","6081462"],[false,"209302943266","2","Juan","6081473"],[false,"209302943266","2","Juan","6081478"],[false,"209302943266","2","Juan","6081488"],[false,"209302943266","2","Juan","6081498"],[false,"209302943266","2","Juan","6081500"],[false,"209302943266","2","Juan","6081515"],[false,"209302943266","2","Juan","6081516"],[false,"209302943266","2","Juan","6081543"],[false,"209302943266","2","Juan","6081544"],[false,"209302943266","2","Juan","6081546"],[false,"209302943266","2","Juan","6081555"],[false,"209302943266","2","Juan","6081557"],[false,"209302943266","2","Juan","6081561"],[false,"209302943266","2","Juan","6081564"],[false,"209302943266","2","Juan","6081568"],[false,"209302943266","2","Juan","6081623"],[false,"209302943266","2","Juan","6081631"],[false,"209302943266","2","Juan","6081638"],[false,"209302943266","2","Juan","6081650"],[false,"209302943266","2","Juan","6081662"],[false,"209302943266","2","Juan","6081667"],[false,"209302943266","2","Juan","6081668"],[false,"209302943266","2","Juan","6081671"],[false,"209302943266","2","Juan","6081746"],[false,"209302943266","2","Juan","6081747"],[false,"209302943266","2","Juan","6081752"],[false,"209302943266","2","Juan","6081755"],[false,"209302943266","2","Juan","6081758"],[false,"209302943266","2","Juan","6081759"],[false,"209302943266","2","Juan","6082549"],[false,"209302943266","2","Juan","6082612"],[false,"209302943266","2","Juan","6082626"],[false,"209302943266","2","Juan","6082627"],[false,"209302943266","2","Juan","6082631"],[false,"209302943266","2","Juan","6082632"],[false,"209302943266","2","Juan","6082634"],[false,"209302943266","2","Juan","6082635"],[false,"209302943266","2","Juan","6082636"],[false,"209302943266","2","Juan","6082638"],[false,"209302943266","2","Juan","6082765"],[false,"209302943266","2","Juan","6082772"],[false,"209302943266","2","Juan","6082839"],[false,"209302943266","2","Juan","6083241"]];
+
+	function nuevaFactura(){
+	var win2;
+	if(!win2){
+			win2 = new Ext.Window({
+				title:'Confirme los datos de la factura',
+				width: 200,
+				height: 200,
+				closeAction :'hide',
+				modal: true, 
+				items: [ {
+					xtype: 'panel',
+					width: '100%',
+					items:[
+								{
+									xtype: "label",
+									html: 'Fecha.<br>',
+									style: {
+										fontSize: '12px',
+										color: '#AAAAAA'
+									}
+								},
+								{
+									xtype: "datefield",
+									value: '01/01/2016'																							
+								},
+								{
+									xtype: "label",
+									html: 'Clearing por linea.<br>',
+									style: {
+										fontSize: '12px',
+										color: '#AAAAAA'
+									}
+								},
+								{
+									xtype: "textfield",
+									value: '200'
+								},
+								{
+									xtype:"button",
+									text: 'Cargar',
+									listeners: {
+										click: function () {
+										win2.close();
+										cargarFactura();
+										}
+									}
+								}
+						]
+				}]
+			});
+			win2.show();
+		}
+	}
+	
+	function cargarFactura(){
+		var myData = [
+			['Minutos Hora No Pico',true],
+			['Minutos Hora Pico',true],
+			['Minutos Exc Sab-Dom-Fer extra',true],
+			['Minutos Exc Hora Pico extragru',true],
+			['Minutos Exc Hora no Pico Extra',true],
+			['Min.consum.incluidos comunidad',true],
+			['Min.consumidos incluidos abono',true]
+		];
+			var storeDet = new Ext.data.ArrayStore({
+			fields: [
+			   {name: 'detalle'},
+			   {name: 'seleccion'}
+			]
+		});
+
+		// manually load local data
+		storeDet.loadData(myData);
+		var win;
+		var grid=new Ext.grid.EditorGridPanel({
+		store: storeDet,
+		columns: [
+			{id:'detalle',header: 'Detalle', width: 200,sortable : true, dataIndex: 'detalle'},
+			{id:'checkcolumn',header: 'Tipo',dataIndex: 'seleccion',width: 100,
+			renderer: function(value, cell)
+			   {
+				return '<form><select name="cars"><option value="minutos">Minutos</option><option value="mensajes">Mensajes</option><option value="varios">Varios</option></select></form>';
+			   }
+			}
+			
+		],
+		stripeRows: true,
+		autoExpandColumn: 'detalle',
+		height: 300,
+		width: 300,
+		//title: 'Array Grid',
+		// config options for stateful behavior
+		stateful: true,
+		stateId: 'grid'
+		});
+		
+		if(!win){
+				win = new Ext.Window({
+					title:'Seleccionar tipo de los siguientes Detalles',
+					width: 300,
+					height: 400,
+					closeAction :'hide',
+					modal: true, 
+					items: [ {
+						xtype: 'panel',
+						//height: 400,
+						width: '100%',
+						//layout: 'hbox',
+						header: false,
+						border: false,
+						items:[ grid,
+								{
+									xtype:"button",
+									text: 'Asignar',
+									listeners: {
+									click: function () {win.close();}
+									}
+								}
+						]
+					}]
+				});
+				win.show();
+			} 
+	
+	}
+	
+	function nuevoUsuario(){
+	var win2;
+	if(!win2){
+			win2 = new Ext.Window({
+				title:'Alta/Modificacion de Usuario/Responsable',
+				width: 200,
+				height: 200,
+				closeAction :'hide',
+				modal: true, 
+				items: [ {
+					xtype: 'panel',
+					width: '100%',
+					items:[
+								{
+									xtype: "label",
+									html: 'Nombre del usuario.<br>',
+									style: {
+										fontSize: '12px',
+										color: '#AAAAAA'
+									}
+								},
+								{
+									xtype: "textfield",
+									value: 'Nombre'																							
+								},
+								{
+									xtype: "label",
+									html: 'Telefono.<br>',
+									style: {
+										fontSize: '12px',
+										color: '#AAAAAA'
+									}
+								},
+								{
+									xtype: "textfield",
+									value: 'Tel'
+								},
+								{
+									xtype: "label",
+									html: 'Correo.<br>',
+									style: {
+										fontSize: '12px',
+										color: '#AAAAAA'
+									}
+								},
+								{
+									xtype: "textfield",
+									value: 'mail'
+								},
+								{
+									xtype:"button",
+									text: 'Guardar',
+									listeners: {
+										click: function () {win2.close();}
+									}
+								}
+						]
+				}]
+			});
+			win2.show();
+		}
+	}
+	
+	function asignarGrupo(){
+		var count=Ext.getCmp('lineas').getStore();
+		count.commitChanges();
+		console.log(count);
+		var lst=Ext.getCmp('lineas').getSelectionModel().getSelections();
+		console.log(lst);
+    	var win;
+		if(!win){
+				win = new Ext.Window({
+					title:'Seleccionar Responsable de Grupo',
+					width: 200,
+					height: 150,
+					closeAction :'hide',
+					modal: true, 
+					items: [ {
+						xtype: 'panel',
+						//height: 400,
+						width: '100%',
+						//layout: 'hbox',
+						header: false,
+						border: false,
+						items:[
+								{
+									xtype: "label",
+									html: 'Usuario(s) seleccionado(s):<br>Mauro - 5466787<br>Jose - 6544787',
+									style: {
+										fontSize: '12px',
+										color: '#AAAAAA'
+									}
+								},
+								{	
+									xtype:'combo',
+									fieldLabel: '  Etapa',
+									id: "grupo",
+									typeAhead: true,
+									width: 125,
+									triggerAction: 'all',
+									lazyRender:true,
+									mode: 'local',
+									store: new Ext.data.ArrayStore({
+										id: 0,
+										fields: [
+											'myId',
+											'displayText'
+										],
+										data: [[000,'Empresa'],[001, 'Mauro'], [002, 'Juan'],[003, 'Jose'],[004, 'Fulano'], [999, 'Nuevo...']]
+
+									}),
+									valueField: 'myId',
+									displayField: 'displayText'
+								},
+								{
+									xtype:"button",
+									text: 'Asignar',
+									listeners: {
+										click: function () {
+										if(Ext.getCmp('grupo').getValue()==999){
+											nuevoUsuario();
+											}else {win.close();} 
+										} 
+									} 
+								},
+								{
+									xtype:"button",
+									text: 'Nuevo Responsable de Grupo',
+									listeners: {
+										click: function () {
+										
+											nuevoUsuario();
+										
+										} 
+									} 
+								}
+						]
+					}]
+				});
+				win.show();
+			} 
+}
+
+function asignarUsuario(){
+		var count=Ext.getCmp('lineas').getStore();
+		count.commitChanges();
+		console.log(count);
+		var lst=Ext.getCmp('lineas').getSelectionModel().getSelections();
+		console.log(lst);
+    	var win;
+		if(!win){
+				win = new Ext.Window({
+					title:'Seleccionar Usuario',
+					width: 200,
+					height: 150,
+					closeAction :'hide',
+					modal: true, 
+					items: [ {
+						xtype: 'panel',
+						//height: 400,
+						width: '100%',
+						//layout: 'hbox',
+						header: false,
+						border: false,
+						items:[
+								{
+									xtype: "label",
+									html: 'Linea seleccionada:27081389',
+									style: {
+										fontSize: '12px',
+										color: '#AAAAAA'
+									}
+								},
+								{	
+									xtype:'combo',
+									fieldLabel: '  Etapa',
+									id: "grupo",
+									typeAhead: true,
+									width: 125,
+									triggerAction: 'all',
+									lazyRender:true,
+									mode: 'local',
+									store: new Ext.data.ArrayStore({
+										id: 0,
+										fields: [
+											'myId',
+											'displayText'
+										],
+										data: [[000,'Empresa'],[001, 'Mauro'], [002, 'Juan'],[003, 'Jose'],[004, 'Fulano'], [999, 'Nuevo...']]
+
+									}),
+									valueField: 'myId',
+									displayField: 'displayText'
+								},
+								{
+									xtype:"button",
+									text: 'Asignar',
+									listeners: {
+										click: function () {
+										if(Ext.getCmp('grupo').getValue()==999){
+											nuevoUsuario();
+											}else {win.close();} 
+										} 
+									} 
+								},
+								{
+									xtype:"button",
+									text: 'Nuevo Usuario',
+									listeners: {
+										click: function () {
+										
+											nuevoUsuario();
+										
+										} 
+									} 
+								}
+						]
+					}]
+				});
+				win.show();
+			} 
+}
+
+Ext.onReady(function(){
+	console.log(data);
+    
+	var reader = new Ext.data.ArrayReader({}, [
+		   {name: 'cambiar'},
+		   {name: 'factura'},
+		   {name: 'grupo'},
+		   {name: 'propietario'},
+		   {name: 'linea'}
+    ]);
+    
+	var store = new Ext.data.GroupingStore({
+			id:'lotGroupStore',
+			reader: reader,
+			//groupOnSort: true,
+			//remoteSort: true,
+			groupField: 'propietario',
+			data:data
+			});
+	
+	var vista = new Ext.grid.GroupingView({
+            forceFit:true,
+            groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "Items" : "Item"]})',
+			getRowClass: function(record) { 
+						return record.get('cambiar') == true ? 'digitsi' : 'digitno'; 
+						} 
+        });
+
+	var grid = new Ext.grid.GridPanel({
+        store: store,
+		//plugins: [filters],
+		columnLines: true,
+		tbar:[],
+		//cls: 'custom-grid', 
+		id:'lineas',
+        columns: [
+			{xtype: 'checkcolumn',header: 'Cambiar?',dataIndex: 'cambiar',width: 55},
+            {header: "Factura", width: 100, dataIndex: 'factura', sortable: true, filterable: true},
+			{header: "Usuario", width: 70, dataIndex: 'grupo', sortable: true, filterable: true},
+			{header: "Responsable", width: 200, dataIndex: 'propietario', sortable: true, filterable: true},
+			{header: "Linea", width: 100, dataIndex: 'linea', sortable: true, filterable: true}
+			
+        ],
+		view: vista,
+		bbar  : [
+		{
+            text:'Desagrupar',
+            handler : function(){
+                store.clearGrouping();
+            }
+        },
+		{
+            text:'Colapsar todo',
+            handler : function(){
+                vista.collapseAllGroups();
+            }
+        },
+		{
+            text:'Expandir todo',
+            handler : function(){
+                vista.expandAllGroups();
+            }
+        }],
+		fbar : [
+		{
+            text:'Asignar lineas seleccionadas a Usuarios',
+            handler : function(){
+                asignarUsuario();
+            }
+        },
+		{
+            text:'Asignar usuarios seleccionados a grupo',
+            handler : function(){
+                asignarGrupo();
+            }
+        },
+		{
+            text:'Imprimir informe',
+            handler : function(){
+              vista.collapseAllGroups();
+            }
+        }
+		
+		],
+        height:600,
+		width:600
+    });
+	
+    var fibasic = new Ext.ux.form.FileUploadField({
+        renderTo: 'fi-basic',
+		width: 400,
+		id: 'kbURL',
+		allowBlank: false,
+		name: 'documentURL',
+		hideLabel: true,
+		emptyText: 'Select a file',
+		buttonCfg: {
+			text: ' ',
+			iconCls: 'upload-icon'
+		},
+		listeners: {
+			fileselected: function (v) {
+				console.log('upload');
+				nuevaFactura();
+				
+			}
+		}
+    });
+	
+
+var combo = new Ext.form.ComboBox({
+    mode: 'local',
+    renderTo: 'combo-facturas',
+    store: new Ext.data.ArrayStore({
+        id: 0,
+        fields: [
+            'myId',
+            'displayText'
+        ],
+        data: [[1, 'enero2016'], [2, 'febrero2016']]
+    }),
+    valueField: 'myId',
+    displayField: 'displayText'
+});  
+	
+	
+	grid.render('grid');
+	vista.collapseAllGroups();
+	//console.log(store);
+	
+var buttons = new Ext.Panel({
+						//height: 400,
+						width: '100%',
+						renderTo: 'extraButtons',
+						//layout: 'hbox',
+						header: false,
+						border: false,
+						items:[
+								{
+									xtype:"button",
+									text: 'Cambiar clasificacion de detalles',
+									listeners: {
+										click: function () {
+											cargarFactura();
+										} 
+									} 
+								},
+								{
+									xtype:"button",
+									text: 'Modificar datos de usuarios',
+									listeners: {
+										click: function () {
+										
+											asignarUsuario();
+										
+										} 
+									} 
+								}
+						]
+			});	
+	
+	});
+
+
+</script>
+
+</head>
+<body>
+    <h2 id="title">Refacturacion de minutos excedentes</h2>
+	<br>
+	Seleccione archivo de facturacion:
+	<div id="fi-basic"></div>
+	
+	<br>O Seleccione factura anterior
+	<div id="combo-facturas"></div>
+	<br>
+	<div id="grid"></div>
+	<br>
+    <div id="extraButtons"></div>
+	<br>
+</body>
+</html>

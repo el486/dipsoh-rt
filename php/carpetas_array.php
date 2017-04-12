@@ -57,32 +57,46 @@
 	<script type="text/javascript" src="../js/gridfilters/filter/BooleanFilter.js"></script>
 
 <script>
-    data=<?php
+    <?php
 		include("class_lib_array.php");
 		$base = new ConexionDB ("E:\\DatosGis\\Planos\\baseRT_bs.mdb");
-		
 		$carpetasClass = new ParserCarpetas($base,$carpeta);
-		echo $carpetasClass->getJsonData();
-	?>;
-	
+		$listramClass = new ParserListaTramites($base,$carpeta);
+		?>;
+	data= <?php echo $carpetasClass->getJsonData(); ?>;
+	listaTramites= <?php echo $listramClass->getJsonData();?>;
 function linkExpedientes(val){
-var val2=val.replace('/','-').replace(' Alc:','-').replace(' Cpo:','-').replace(' ','');
-var array=val2.split('-');
-return '<a href="http://sistemas.gba.gov.ar/consulta/expedientes/movimientos.php?caract='+array[0]+'&nroexp='+array[1]+'&anioexp='+array[2]+'&alcance=0&nrocuerpo=1" target="_blank">'+val+'</a>'
+	var val2=val.replace('/','-').replace(' Alc:','-').replace(' Cpo:','-').replace(' ','');
+	var array=val2.split('-');
+	return '<a href="http://sistemas.gba.gov.ar/consulta/expedientes/movimientos.php?caract='+array[0]+'&nroexp='+array[1]+'&anioexp='+array[2]+'&alcance=0&nrocuerpo=1" target="_blank">'+val+'</a>'
+}
+
+function date2string(date){
+	if (date==''){
+	return '0';
+	} else {
+	return '%27'+(date.getMonth()+1)+'/'+date.getDate()+'/'+date.getFullYear()+'%27';
+	}
+}
+function parseCheck(value){
+	if (value){
+	return '-1';
+	} else {
+	return '0';
+	}
 }
 	
 function popupTramites(value){
-    
+    var win;
 	var url='tramites.php?carpeta='+value;
 	Ext.Ajax.request({
     url:url,
     success: function(response){
         // response.responseText will have your html content
-
-		var win;
-			if(!win){
+		if(!win){
 				win = new Ext.Window({
 					title:'Tramites de la carpeta '+value,
+					id:'winTramites',
 					width: 600,
 					height: 300,
 					closeAction :'hide',
@@ -93,7 +107,12 @@ function popupTramites(value){
 					buttons: [{
 						text     : 'Cerrar',
 						handler  : function(){
-							win.hide();
+							win.close();
+						}
+					},{
+						text     : 'Agregar Tramite',
+						handler  : function(){
+							agregarTramite(value);
 						}
 					}]
 				});
@@ -124,7 +143,7 @@ function popupNomencla(value){
 					buttons: [{
 						text     : 'Cerrar',
 						handler  : function(){
-							win.hide();
+							win.close();
 						}
 					}]
 				});
@@ -132,6 +151,241 @@ function popupNomencla(value){
 			} 
 	  }
 	});
+}
+
+function agregarTramite(carpeta){
+	var win;
+	if(!win){
+			win = new Ext.Window({
+				title:'Alta de tramites carpeta '+carpeta,
+				width: 200,
+				height: 250,
+				closeAction :'hide',
+				modal: true, 
+				items: [ {
+					xtype: 'panel',
+					width: '100%',
+					items:[
+								{
+									xtype: "label",
+									html: 'Tramite.<br>',
+									style: {
+										fontSize: '12px',
+										color: '#AAAAAA'
+									}
+								},
+								{	
+									xtype:'combo',
+									fieldLabel: '  Tramite',
+									id: "codTramite",
+									typeAhead: true,
+									width: 125,
+									triggerAction: 'all',
+									lazyRender:true,
+									mode: 'local',
+									store: new Ext.data.ArrayStore({
+										id: 0,
+										fields: [
+											'myId',
+											'displayText'
+										],
+										data: listaTramites
+										//data:[["1","CIRCULAR 10"],["2","INFORME DE DOMINIO"],["3","VISADO CPA"],["4","VISADO CECOD"],["5","VISADO MUNICIPAL"],["6","ANTECEDENTES CATASTRALES"],["7","VISADO VIALIDAD"],["8","VISADO DPE"],["9","VISADO ADA"],["10","REGISTRACION CATASTRO"],["11","REGISTRACION REGISTRO PROPIEDAD"],["12","VISADO GPS"],["13","VISADO ASUNTOS AGRARIOS"],["14","VISADO GEODESIA"],["15","PRESENTACION DEFINITIVO"],["16",null],["17","ASIENTO REGISTRAL"]]
+
+									}),
+									valueField: 'myId',
+									displayField: 'displayText'
+								},
+								{
+									xtype: "label",
+									html: 'Fecha ingreso.<br>',
+									style: {
+										fontSize: '12px',
+										color: '#AAAAAA'
+									}
+								},							
+								{
+									xtype: "datefield",
+									id: "fechaIng",
+									value: new Date()																							
+								},
+								{
+									xtype: "label",
+									html: 'Fecha Aprobacion.<br>',
+									style: {
+										fontSize: '12px',
+										color: '#AAAAAA'
+									}
+								},
+								{
+									xtype: "datefield",
+									id: "fechaAprob"
+								},
+								{
+									xtype: "label",
+									html: 'Aprobado.<br>',
+									style: {
+										fontSize: '12px',
+										color: '#AAAAAA'
+									}
+								},
+								{
+									xtype: "checkbox",
+									id: "checkAprob"																							
+								},
+								{
+									xtype: "label",
+									html: 'Observaciones.<br>',
+									style: {
+										fontSize: '12px',
+										color: '#AAAAAA'
+									}
+								},
+								{
+									xtype: "textfield",
+									id: "observaciones"																							
+								}
+						],
+						buttons: [{
+							text: 'Guardar',
+							listeners: {
+								click: function () {
+									var url='editarTramite.php?accion=nuevo&carpeta='+carpeta
+									+'&tramite='+Ext.getCmp('codTramite').getValue()
+									+'&fini='+date2string(Ext.getCmp('fechaIng').getValue())
+									+'&ffin='+date2string(Ext.getCmp('fechaAprob').getValue())
+									+'&aprob='+parseCheck(Ext.getCmp('checkAprob').checked)
+									+'&obs='+Ext.getCmp('observaciones').getValue();
+									//alert(url);
+									Ext.Ajax.request({
+									url:url,
+									success: function(response){
+										var text=response.responseText;
+										if (text=='') text='Agregado con exito'; 
+										alert(text);
+										} 											 
+									});
+									win.close();
+									Ext.getCmp('winTramites').close();
+									popupTramites(carpeta);
+								}
+							}
+						},{
+						text     : 'Cerrar',
+						handler  : function(){
+							win.close();
+							}
+						}]
+				}]
+			});
+			win.show();
+		}
+   //   }
+	//});
+}
+
+function editTramite(id,carpeta,fecha_pedido){
+	var win;
+	if(!win){
+			win = new Ext.Window({
+				title:'Edicion de tramite '+id ,
+				width: 200,
+				height: 220,
+				closeAction :'hide',
+				modal: true, 
+				items: [ {
+					xtype: 'panel',
+					width: '100%',
+					items:[
+								{
+									xtype:"button",
+									text     : 'Borrar Tramite '+id,
+									handler  : function(){
+										var url='editarTramite.php?accion=borrar&id='+id;
+										//alert(url);
+										Ext.Ajax.request({
+										url:url,
+										success: function(response){
+											var text=response.responseText;
+											if (text=='') text='Eliminado con exito'; 
+											alert(text);
+											} 											 
+										});
+										win.close();
+										Ext.getCmp('winTramites').close();
+										popupTramites(carpeta);
+										}
+								},
+								{
+									xtype: "label",
+									html: '<br>Fecha Pedido: '+fecha_pedido+'.<br>Fecha Recibido:<br>',
+									style: {
+										fontSize: '12px',
+										color: '#AAAAAA'
+									}
+								},
+								{
+									xtype: "datefield",
+									id: "fechaRec",
+									value: new Date()																							
+								},
+								{
+									xtype: "label",
+									html: 'Aprobado.<br>',
+									style: {
+										fontSize: '12px',
+										color: '#AAAAAA'
+									}
+								},
+								{
+									xtype: "checkbox",
+									id: "checkAprob"																							
+								},
+								{
+									xtype: "label",
+									html: 'Observaciones.<br>',
+									style: {
+										fontSize: '12px',
+										color: '#AAAAAA'
+									}
+								},
+								{
+									xtype: "textfield",
+									id: "observaciones"																							
+								}
+						],
+						buttons: [{
+							text: 'Guardar',
+							listeners: {
+								click: function () {
+									var url='editarTramite.php?accion=editar&id='+id
+									+'&ffin='+date2string(Ext.getCmp('fechaRec').getValue())
+									+'&aprob='+parseCheck(Ext.getCmp('checkAprob').checked)
+									+'&obs='+Ext.getCmp('observaciones').getValue();
+									//alert(url);
+									Ext.Ajax.request({
+									url:url,
+									success: function(response){
+										var text=response.responseText;
+										if (text=='') text='Modificado con exito'; 
+										alert(text);
+										} 											 
+									});
+									win.close();
+									Ext.getCmp('winTramites').close();
+									popupTramites(carpeta);
+								}
+							}
+						},{
+						text     : 'Cerrar',
+						handler  : function(){
+							win.close();
+							}
+						}]
+				}]
+			});
+			win.show();
+		}
 }
 
 Ext.onReady(function(){

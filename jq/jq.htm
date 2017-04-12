@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Carpetas</title>
+    <script src="./jquery.min.js"></script>
+    <script type="text/javascript" src="./w2ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./w2ui.min.css" />
+
+	<script type="text/javascript">
+	$(function () {
+	function fn_render_fin(record, ind, col_ind, data) {
+		if (data == '1') {
+		data= '<div style="color:red">Finalizado</div>';
+        } else {
+		data= '<div style="color:green">En Tramite</div>'; 
+		}
+		return data;
+	}
+	
+	function fn_render_aprob(record, ind, col_ind, data) {
+		if (data == '1') {
+		data= '<div style="color:red">Aprobado</div>';
+        } else {
+		data= '<div style="color:green">En Tramite</div>'; 
+		}
+		return data;
+	}
+	  
+		$('#gridTramites').w2grid({ 
+			name: 'gridTramites', 
+			show: { 
+				toolbar: true,
+				footer: true
+			},
+			multiSearch: true,
+			searches: [
+				{ field: 'recid', caption: 'ID ', type: 'int' },
+				{ field: 'Tramite', caption: 'Tramite', type: 'text' },
+				{ field: 'Aprobado', caption: 'Aprobado', type: 'list', options: { items: ['1','0']} },
+				{ field: 'Fecha_recibido', caption: 'Recibido', type: 'text' },
+				{ field: 'Observaciones', caption: 'Observaciones', type: 'text' }
+			],
+			columns: [                
+				{ field: 'recid', caption: 'ID', size: '50px', sortable: true, attr: 'align=center'},
+				{ field: 'Tramite', caption: 'Tramite', size: '30%', sortable: true },
+				{ field: 'Aprobado', caption: 'Aprobado', size: '40%' , sortable: true, render: fn_render_aprob},
+				{ field: 'Fecha_recibido', caption: 'Recibido', render: 'date:yyyy-mm-dd', size: '120px' },
+				{ field: 'Observaciones', caption: 'Observaciones', size: '40%' }
+			],        
+			records: []
+		});
+		
+		$('#gridCarpetas').w2grid({ 
+			name: 'gridCarpetas', 
+			show: { 
+				toolbar: true,
+				footer: true
+			},
+			multiSearch: true,
+			searches: [
+				{ field: 'recid', caption: 'ID ', type: 'int' },
+				{ field: 'Partido', caption: 'Partido', type: 'text' },
+				{ field: 'Parcela', caption: 'Parcela', type: 'list', options: { items: ['1','0']} },
+				{ field: 'Obra', caption: 'Obra', type: 'text' },
+				{ field: 'Propietario', caption: 'Propietario', type: 'text' },
+				{ field: 'Num_expediente', caption: 'Expediente', type: 'text' },
+				{ field: 'Observaciones', caption: 'Observaciones', type: 'text' },
+				{ field: 'Finalizado', caption: 'Fin', type: 'text' }
+			],
+			columns: [                
+				{ field: 'recid', caption: 'ID', size: '50px', sortable: true, attr: 'align=center' },
+				{ field: 'Partido', caption: 'Partido', size: '80px', sortable: true },
+				{ field: 'Parcela', caption: 'Parcela', size: '80px' },
+				{ field: 'Obra', caption: 'Obra', size: '30%' },
+				{ field: 'Propietario', caption: 'Propietario', size: '30%' },
+				{ field: 'Num_expediente', caption: 'Expediente', size: '120px' },
+				{ field: 'Observaciones', caption: 'Observaciones', size: '30%' },
+				{ field: 'Finalizado', caption: 'Fin', size: '100px', render: fn_render_fin }
+			],        
+			records: [],
+			onDblClick: function(event) {
+				console.log(event);
+				w2ui.gridTramites.load('./index.php?carpeta='+event.recid);
+			}
+		});
+		w2ui.gridCarpetas.load('./index.php');
+		
+	});
+	</script>
+	
+	</head>
+<body>
+<h1>Carpetas</h1>
+<div id="gridCarpetas" style="width: 100%; height: 400px;"></div>
+<h1>Tramites</h1>
+<div id="gridTramites" style="width: 50%; height: 300px;"></div>
+</body>
+</html>
